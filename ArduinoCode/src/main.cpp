@@ -1,14 +1,16 @@
 #include <Arduino.h>
-#include "motor.h"
+#include "encISR.h"
+#include "Encoder.h"
+#include "velEstimator.h"
 
-#define Ts_us 5000 // Период квантования в [мкс]
-#define Ts_s (Ts_us / 1000000.0) // Период квантования в [с]
 
 void setup()
 {
   Serial.begin(115200);
-  leftEncInit();
-  rightEncInit();
+  leftE.init(leftISR);
+  rightE.init(rightISR);
+  // leftEncInit();
+  // rightEncInit();
 }
 
 void loop()
@@ -22,10 +24,12 @@ void loop()
   
   ///////// SENSE /////////
   // Считывание датчиков
-  leftEncTick();
-  rightEncTick();
-  const float leftEncPhi = GleftPhi;
-  const float rightEncPhi = GrightPhi;
+  leftE.tick();
+  rightE.tick();
+  // leftEncTick();
+  // rightEncTick();
+  const float leftEncPhi = leftE.cPhi;//GleftPhi;
+  const float rightEncPhi = rightE.cPhi;//GrightPhi;
 
   ///////// PLAN /////////
   // Расчет управляющих воздействий
