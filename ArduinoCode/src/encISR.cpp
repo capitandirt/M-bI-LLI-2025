@@ -1,4 +1,5 @@
 #include "encISR.h"
+#include "Globals.h"
 
 void leftISR()
 {

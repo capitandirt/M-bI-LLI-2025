@@ -2,25 +2,27 @@
 #include <Arduino.h>
 #include "config.h"
 
-class Encoder
+struct EncoderParameters
+{
+    int CLOCK_A_PIN;
+    int B_PIN;
+    int DIR;
+    void (*ISRfunc)();
+};
+
+class Encoder : public EncoderParameters
 {
 private:
-    int8_t Ett[4][4]; //сначала старое, потом новое
-    int8_t B_PIN, CLOCK_A_PIN;
-    int8_t DIR;
-    float Phi;
-    volatile int16_t Counter;
-    bool isRight;
-    void (*ISRfunc)();
-    uint8_t encOld;
-    uint8_t B;
-    uint8_t ClockA;
-    uint8_t A;
+    int8_t Ett[4][4] = {0}; //сначала старое, потом новое
+    volatile int16_t Counter = 0;
+    volatile uint8_t encOld = 0;
+
+    float Phi = 0;
 public:
-    const int &cPhi = Phi;
-    Encoder(bool isRight_, int8_t B_PIN_, int8_t CLOCK_A_PIN_, int8_t DIR_);
-    void init(void (*ISRfunc_)());
-    void addCounter(int16_t counter_);
+    const float &q_Phi = Phi;
+    
+    Encoder(EncoderParameters *ecp) : EncoderParameters(*ecp){}
+    void init();
 
     void tick();
     void isr();
