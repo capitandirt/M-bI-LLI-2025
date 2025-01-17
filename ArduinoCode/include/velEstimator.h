@@ -4,12 +4,12 @@
 class VelEstimator
 {
 private:
-    float phiOld, w = 0;
+    float phiOld, omega = 0;
     Encoder* enc;
-    float WRawEstimator(float phi);
-    void lowPassFilter(float wRaw);
+    float omegaRawEstimator(float phi);
+    float lowPassFilter(float wRaw);
 public:
-    const float& q_w = w; 
+    const float& q_omega = omega; 
     VelEstimator(Encoder* enc_);
     
     void tick();

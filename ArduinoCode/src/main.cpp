@@ -8,7 +8,8 @@ void setup()
 {
   leftE.init();
   rightE.init();
-  
+  leftMotor.init(LEFT_MOTOR_POLARITY, LEFT_MOTOR_DIR, LEFT_MOTOR_PWM);
+  rightMotor.init(RIGHT_MOTOR_POLARITY, RIGHT_MOTOR_DIR, RIGHT_MOTOR_PWM);
   Serial.begin(115200);
 }
 
@@ -23,30 +24,29 @@ void loop()
   
   ///////// SENSE /////////
   // Считывание датчиков
-  leftE.tick();
-  rightE.tick();
-  leftEst.tick();
-  rightEst.tick();
-  const float leftEncPhi = leftE.q_Phi;
-  const float rightEncPhi = rightE.q_Phi;
-  const float Wl = leftEst.q_w;
-  const float Wr = rightEst.q_w;
+  battery.tick();
+  funcCelect.tick();
+
+  leftMotor.tick(battery.volts);
+  rightMotor.tick(battery.volts);
+
+  const float omegaL = leftMotor.realSpeed;
+  const float omegaR = rightMotor.realSpeed;
+  state.update(omegaL, omegaR);
 
   ///////// PLAN /////////
   // Расчет управляющих воздействий
-  static Integrator theta;
-  const float Vl = Wl * WHEEL_RADIUS, Vr = Wr * WHEEL_RADIUS;
-  const float V = (Vl + Vr) / 2;
-  const float theta_i = (Vr - Vl) / ROBOT_WIDTH;
-  theta.tick(theta_i);
-  const float Vx = V * cos(theta.q_out);
-  const float Vy = V * sin(theta.q_out);
-  static Integrator X, Y;
-  X.tick(Vx);
-  Y.tick(Vy);
-
+  const float Vin = 0, theta_i_in = 0;
+  float W_f_in = Vin / WHEEL_RADIUS, 
+        W_delta_in = theta_i_in  * ROBOT_WIDTH / WHEEL_RADIUS;
+  //микшер
+  float Wl_in = W_f_in - W_delta_in / 2, 
+        Wr_in = W_f_in + W_delta_in / 2;
+  
 
   ///////// ACT /////////
   // Приведение управляющих воздействий в действие и логирование данных
-  Serial.println(String(theta.q_out));// + " " + String(Y.q_out));  
+  
+  leftMotor.drive(Wl_in);
+  //rightMotor.drive(Wr_in);
 }

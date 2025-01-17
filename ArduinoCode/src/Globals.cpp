@@ -19,4 +19,13 @@ EncoderParameters right_ep =
 Encoder leftE(&left_ep);
 Encoder rightE(&right_ep);
 
-VelEstimator leftEst(&leftE), rightEst(&rightE);
+VelEstimator leftVelEst(&leftE); 
+VelEstimator rightVelEst(&rightE);
+
+State state;
+
+Battery battery;
+
+FunctionalCelector funcCelect;
+
+ServoMotor leftMotor(&leftE, &leftVelEst), rightMotor(&rightE, &rightVelEst);
