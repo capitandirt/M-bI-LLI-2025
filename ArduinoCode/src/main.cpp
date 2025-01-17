@@ -36,7 +36,7 @@ void loop()
 
   ///////// PLAN /////////
   // Расчет управляющих воздействий
-  const float Vin = 0, theta_i_in = 0;
+  const float Vin = 0.3, theta_i_in = 0;
   float W_f_in = Vin / WHEEL_RADIUS, 
         W_delta_in = theta_i_in  * ROBOT_WIDTH / WHEEL_RADIUS;
   //микшер
@@ -47,6 +47,6 @@ void loop()
   ///////// ACT /////////
   // Приведение управляющих воздействий в действие и логирование данных
   
-  leftMotor.drive(Wl_in);
+  leftMotor.drive(1);
   //rightMotor.drive(Wr_in);
 }

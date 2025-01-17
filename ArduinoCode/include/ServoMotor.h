@@ -13,7 +13,7 @@ private:
     PIreg motReg;
 public:
     const float& realSpeed;
-    ServoMotor(Encoder* enc_, VelEstimator* est_) : realSpeed(est_->q_omega), motReg(1 / (2 * K_MOTOR * T_u), T_u, 1)//последнее - 1 Вольт
+    ServoMotor(Encoder* enc_, VelEstimator* est_) : realSpeed(est_->q_omega), motReg(1 / (2 * K_MOTOR * T_u), T_MOTOR, 1)//последнее - 1 Вольт
     {
         enc = enc_;
         est = est_;

@@ -8,9 +8,10 @@ void Motor::init(int DIR_, int dirPin_, int pwmPin_)
 }
 
 void Motor::drive(float u)//[В]
-{
+{   
     int pwm = 255 * (u / batteryVolts);
     pwm = constrain(pwm, -255, 255);
+    
     if(pwm >= 0)
     {
         digitalWrite(dirPin, DIR);

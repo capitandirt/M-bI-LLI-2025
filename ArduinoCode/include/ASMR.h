@@ -83,7 +83,7 @@ public:
 
         cycCicle[progCounter](&ms, s);
         
-        Serial.println(String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(ms.isComplete));
+        //Serial.println(String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(ms.isComplete));
         if(ms.isComplete)
         {
             progCounter = rotMod(progCounter + 1);

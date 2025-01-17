@@ -17,7 +17,7 @@ void ServoMotor::tick(float batteryVolts)
 void ServoMotor::drive(float omega) // [рад/с]
 {
     motReg.tick(omega - realSpeed);
-    
+    Serial.println(String(omega) + " " + String(realSpeed));
     motor.drive(motReg.uOut);
     
     //motor.drive(4);
