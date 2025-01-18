@@ -47,6 +47,6 @@ void loop()
   ///////// ACT /////////
   // Приведение управляющих воздействий в действие и логирование данных
   
-  leftMotor.drive(1);
+  leftMotor.drive(0.3);
   //rightMotor.drive(Wr_in);
 }

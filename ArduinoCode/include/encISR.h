@@ -1,4 +1,16 @@
 #pragma once
+#include "Globals.h"
 
-void leftISR();
-void rightISR();
+extern Encoder leftE;
+
+void leftISR()
+{
+    leftE.isr();
+}
+
+extern Encoder rightE;
+
+void rightISR()
+{
+    rightE.isr();
+}

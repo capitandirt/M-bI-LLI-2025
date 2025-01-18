@@ -18,7 +18,24 @@ public:
         enc = enc_;
         est = est_;
     }
-    void init(int DIR, int dirPin, int pwmPin);
-    void tick(float batteryVolts);
-    void drive(float omega); // [рад/с]
+    void init(int DIR, int dirPin, int pwmPin)
+    {
+        if(DIR == -1) DIR = 0;
+        enc->init();
+        motor.init(DIR, dirPin, pwmPin);
+    }   
+    void tick(float batteryVolts)
+    {
+        enc->tick();
+        motor.tick(batteryVolts);
+        est->tick();
+    }   
+    void drive(float omega) // [рад/с]
+    {
+        motReg.tick(omega - realSpeed);
+        Serial.println(String(omega) + " " + String(realSpeed));
+        motor.drive(motReg.uOut);
+        
+        //motor.drive(4);
+    }
 };
