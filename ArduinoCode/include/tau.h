@@ -30,6 +30,14 @@ public:
     {
         float Kp = K;
         float Ki = K / T;
+
+        // const float p = err * Kp;
+        // const float _U = p + I.out *  Ki;
+        // if(_U == constrain(_U, -maxOut, maxOut) || err * _U < 0)
+        //     I.tick(err);
+        // U = constrain(_U, -maxOut, maxOut);
+
+        
         if(abs(I.out + err * Ts_s) < maxI / Ki) I.tick(err);
         u = Kp * err + Ki * I.out;
     }

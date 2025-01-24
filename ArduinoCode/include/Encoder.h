@@ -50,7 +50,7 @@ public:
         interrupts();
     }
 
-    void tick()
+    Encoder& tick()
     {
         noInterrupts();
         const int deltaEnc = Counter;
@@ -58,6 +58,8 @@ public:
         interrupts();
 
         Phi += deltaEnc * TICK_TO_RAD;
+
+        return *this;
     }
     void isr()
     {

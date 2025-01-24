@@ -1,6 +1,17 @@
 #pragma once
 #include "config.h"
 #include "tau.h"
+
+void polarSpeedToMotorSpeed(float Vin, float theta_i_in, float* omega_l, float* omega_r)
+{
+    // Расчет управляющих воздействий
+    float W_f_in = Vin / WHEEL_RADIUS, 
+        W_delta_in = theta_i_in  * ROBOT_WIDTH / WHEEL_RADIUS;
+    //микшер
+    *omega_l = W_f_in - W_delta_in / 2, 
+    *omega_r = W_f_in + W_delta_in / 2;
+}
+
 class State
 {
 private:

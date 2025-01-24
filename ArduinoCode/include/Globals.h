@@ -37,4 +37,19 @@ Battery battery;
 
 FunctionalCelector funcCelect;
 
-ServoMotor leftMotor(&leftE, &leftVelEst), rightMotor(&rightE, &rightVelEst);
+Motor leftMotor, rightMotor;
+PIreg leftPIreg(1 / (2 * K_MOTOR * T_u), T_MOTOR, 1), rightPIreg(1 / (2 * K_MOTOR * T_u), T_MOTOR, 1);
+
+ServoMotor leftServo(&leftE, &leftVelEst, &leftMotor, &leftPIreg), rightServo(&rightE, &rightVelEst, &rightMotor, &rightPIreg);
+
+void initEncoders()
+{
+    leftE.init();
+    rightE.init();
+}
+
+void initMotors()
+{
+    leftServo.init(LEFT_MOTOR_POLARITY, LEFT_MOTOR_DIR, LEFT_MOTOR_PWM);
+    rightServo.init(RIGHT_MOTOR_POLARITY, RIGHT_MOTOR_DIR, RIGHT_MOTOR_PWM);
+}

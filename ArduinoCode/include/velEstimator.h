@@ -24,10 +24,12 @@ public:
     }
     
     
-    void tick()
+    VelEstimator& tick()
     {
         const float phi = enc->q_Phi;
         const float omegaRaw = omegaRawEstimator(phi);
         omega += lowPassFilter(omegaRaw);
+
+        return *this;
     }
 };

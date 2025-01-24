@@ -6,10 +6,8 @@
 
 void setup()
 {
-  leftE.init();
-  rightE.init();
-  leftMotor.init(LEFT_MOTOR_POLARITY, LEFT_MOTOR_DIR, LEFT_MOTOR_PWM);
-  rightMotor.init(RIGHT_MOTOR_POLARITY, RIGHT_MOTOR_DIR, RIGHT_MOTOR_PWM);
+  initEncoders();
+  initMotors();
   Serial.begin(115200);
 }
 
@@ -27,26 +25,20 @@ void loop()
   battery.tick();
   funcCelect.tick();
 
-  leftMotor.tick(battery.volts);
-  rightMotor.tick(battery.volts);
 
-  const float omegaL = leftMotor.realSpeed;
-  const float omegaR = rightMotor.realSpeed;
+  const float omegaL = leftServo.realSpeed;
+  const float omegaR = rightServo.realSpeed;
   state.update(omegaL, omegaR);
 
   ///////// PLAN /////////
-  // Расчет управляющих воздействий
   const float Vin = 0.3, theta_i_in = 0;
-  float W_f_in = Vin / WHEEL_RADIUS, 
-        W_delta_in = theta_i_in  * ROBOT_WIDTH / WHEEL_RADIUS;
-  //микшер
-  float Wl_in = W_f_in - W_delta_in / 2, 
-        Wr_in = W_f_in + W_delta_in / 2;
+  float Wl_in, Wr_in;
+  polarSpeedToMotorSpeed(Vin, theta_i_in, &Wl_in, &Wr_in);
   
 
   ///////// ACT /////////
   // Приведение управляющих воздействий в действие и логирование данных
   
-  leftMotor.drive(0.3);
+  leftServo.drive(0.3, battery.volts);
   //rightMotor.drive(Wr_in);
 }
