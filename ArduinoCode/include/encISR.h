@@ -1,5 +1,5 @@
 #pragma once
-#include "Globals.h"
+#include "Encoder.h"
 
 extern Encoder leftE;
 
@@ -14,3 +14,4 @@ void rightISR()
 {
     rightE.isr();
 }
+//из ВелЭст убрать энкодер, 

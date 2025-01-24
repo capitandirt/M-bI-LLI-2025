@@ -30,7 +30,7 @@ public:
             analogWrite(pwmPin, -pwm);
         }
     }
-    void tick(float batteryVolts_) 
+    void setBatteryVolts(float batteryVolts_) 
     {
         batteryVolts = batteryVolts_;
     }

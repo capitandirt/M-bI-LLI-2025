@@ -27,7 +27,7 @@
 
 #define K_MOTOR (6 / 1.5) //он выдаёт примерно 6.5 рад/с на 1.5 Волта
 #define T_MOTOR 0.21 //210 мс - 70% времени от разгона от 0 до некой постоянной скорости при напряжении
-#define T_u (2 * Ts_s)
+#define T_u (32 * Ts_s)
 
 #define BATTERY_VOLTS A7
 #define FUNCTION_PIN A6
@@ -35,6 +35,6 @@
 #define K_FILTER (0.5)
 
 
-#define FORW_SPEED 0.5 // скорость робота вперёд по-умолчанию [м/с]
+#define FORW_SPEED 0.2 // скорость робота вперёд по-умолчанию [м/с]
 #define CELL_LENGTH 0.18 // длинна клетки [м]
 #define CYC_BUF_SIZE 64 // длинна буфера циклограмм

@@ -9,6 +9,10 @@ void setup()
   initEncoders();
   initMotors();
   Serial.begin(115200);
+
+
+  asmr.addCyc(SS90EL);
+  asmr.addCyc(STOP);
 }
 
 void loop()
@@ -18,27 +22,33 @@ void loop()
   static uint32_t timer = micros();
   while(micros() - timer < Ts_us)
     ;
+  uint32_t dtime = micros() - timer;
   timer = micros();
+
+  // static int checker = 0;
+  // checker += 10;
+
+  // static VelEstimator virtualEstimator;
+  // virtualEstimator.tick(checker);
+  // Serial.println(virtualEstimator.q_omega);
   
   ///////// SENSE /////////
   // Считывание датчиков
-  battery.tick();
+  BatteryTick();
   funcCelect.tick();
-
 
   const float omegaL = leftServo.realSpeed;
   const float omegaR = rightServo.realSpeed;
   state.update(omegaL, omegaR);
 
+
   ///////// PLAN /////////
-  const float Vin = 0.3, theta_i_in = 0;
-  float Wl_in, Wr_in;
-  polarSpeedToMotorSpeed(Vin, theta_i_in, &Wl_in, &Wr_in);
   
 
   ///////// ACT /////////
   // Приведение управляющих воздействий в действие и логирование данных
   
-  leftServo.drive(0.3, battery.volts);
+  //leftServo.drive(6.28, battery.volts);
   //rightMotor.drive(Wr_in);
+  asmr.exec();
 }

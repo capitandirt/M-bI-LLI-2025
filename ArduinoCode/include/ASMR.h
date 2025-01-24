@@ -1,5 +1,6 @@
-#include "config.h"
 #pragma once
+#include "config.h"
+#include "MotionControl.h"
 
 struct Sensors
 {
@@ -60,6 +61,7 @@ CYCLOGRAM(SS90EL)
 class ASMR
 {
 private:
+    MotionControl* motionControl;
     Cyclogram cycCicle[CYC_BUF_SIZE] = {IDLE};
     int progCounter = 0, progEnd = 0;
     uint32_t lastProgStart = 0;
@@ -68,6 +70,7 @@ private:
         return in % CYC_BUF_SIZE;
     }
 public:
+    ASMR(MotionControl* motionControl_) : motionControl(motionControl_){}
     void addCyc(Cyclogram cyc)
     {
         progEnd = rotMod(progEnd + 1);
@@ -89,5 +92,8 @@ public:
             progCounter = rotMod(progCounter + 1);
             lastProgStart = millis() / 1000.0;
         }
+        
+        if(cycCicle[progCounter] != STOP) Serial.println(String(ms.v_f0) + " " + String(ms.theta_i0));
+        motionControl->tick(ms.v_f0, ms.theta_i0);
     }
 };

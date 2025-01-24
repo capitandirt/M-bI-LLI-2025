@@ -4,8 +4,7 @@
 class VelEstimator
 {
 private:
-    float phiOld, omega = 0;
-    Encoder* enc;
+    float phiOld = 0, omega = 0;
     float omegaRawEstimator(float phi)
     {
         float wRaw = (phi - phiOld) / Ts_s;
@@ -14,21 +13,16 @@ private:
     }
     float lowPassFilter(float omegaRaw)
     {
-        return (omegaRaw - omega) * K_FILTER;
+        return omega + (omegaRaw - omega) * K_FILTER;
     }
 public:
-    const float& q_omega = omega; 
-    VelEstimator(Encoder* enc_)
-    {
-        enc = enc_;
-    }
+    const float& q_omega = omega; //скорость в [единиц / с]
     
     
-    VelEstimator& tick()
+    VelEstimator& tick(float phi)
     {
-        const float phi = enc->q_Phi;
         const float omegaRaw = omegaRawEstimator(phi);
-        omega += lowPassFilter(omegaRaw);
+        omega = lowPassFilter(omegaRaw);
 
         return *this;
     }

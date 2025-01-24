@@ -28,10 +28,8 @@ private:
     v;
 public:
     const float &x, &y, &theta;
-    State() : theta(Theta.out), x(X.out), y(Y.out) 
-    {
-
-    }
+    State() : theta(Theta.out), x(X.out), y(Y.out) {}
+    
     void update(float omegaL, float omegaR)
     {
         vL = omegaL * WHEEL_RADIUS;

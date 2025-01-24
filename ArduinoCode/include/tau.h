@@ -31,14 +31,17 @@ public:
         float Kp = K;
         float Ki = K / T;
 
-        // const float p = err * Kp;
-        // const float _U = p + I.out *  Ki;
-        // if(_U == constrain(_U, -maxOut, maxOut) || err * _U < 0)
-        //     I.tick(err);
-        // U = constrain(_U, -maxOut, maxOut);
+        const float p = err * Kp;
+        const float i = I.out * Ki;
+        u = p + i;
 
-        
-        if(abs(I.out + err * Ts_s) < maxI / Ki) I.tick(err);
-        u = Kp * err + Ki * I.out;
+        float maxOut = 5;//максимум вольт, который может выдавать регулятор
+
+        if(u == constrain(u, -maxOut, maxOut) || err * u < 0)
+            I.tick(err);
+        u = constrain(u, -maxOut, maxOut);
+
+        // if(abs(I.out + err * Ts_s) < maxI / Ki) I.tick(err);
+        // u = Kp * err + Ki * I.out;
     }
 };

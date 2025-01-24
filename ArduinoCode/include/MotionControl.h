@@ -1,3 +1,4 @@
+#pragma once
 #include "ServoMotor.h"
 class MotionControl
 {
@@ -10,14 +11,14 @@ public:
         right = right_;
     }
     
-    MotionControl& tick(float Vin, float theta_i_in, float batteryVolts)
+    MotionControl& tick(float Vin, float theta_i_in)
     {
         // Расчет управляющих воздействий
-        float W_f_in = Vin / WHEEL_RADIUS, 
-            W_delta_in = theta_i_in  * ROBOT_WIDTH / WHEEL_RADIUS;
+        float W_f_in = Vin / WHEEL_RADIUS;
+        float W_delta_in = theta_i_in  * ROBOT_WIDTH / WHEEL_RADIUS;
         //микшер
-        left->drive(W_f_in - W_delta_in / 2, batteryVolts); 
-        right->drive(W_f_in + W_delta_in / 2, batteryVolts);
+        left->drive(W_f_in - W_delta_in / 2); 
+        right->drive(W_f_in + W_delta_in / 2);
         return *this;
     }
 };

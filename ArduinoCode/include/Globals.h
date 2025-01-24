@@ -8,6 +8,8 @@
 #include "FunctionalCelector.h"
 #include "Motor.h"
 #include "ServoMotor.h"
+#include "MotionControl.h"
+#include "ASMR.h"
 
 EncoderParameters left_ep = 
 {
@@ -28,8 +30,8 @@ EncoderParameters right_ep =
 Encoder leftE(&left_ep);
 Encoder rightE(&right_ep);
 
-VelEstimator leftVelEst(&leftE); 
-VelEstimator rightVelEst(&rightE);
+VelEstimator leftVelEst; 
+VelEstimator rightVelEst;
 
 State state;
 
@@ -53,3 +55,14 @@ void initMotors()
     leftServo.init(LEFT_MOTOR_POLARITY, LEFT_MOTOR_DIR, LEFT_MOTOR_PWM);
     rightServo.init(RIGHT_MOTOR_POLARITY, RIGHT_MOTOR_DIR, RIGHT_MOTOR_PWM);
 }
+
+void BatteryTick()
+{
+    float volt = battery.tick().volts;
+    leftMotor.setBatteryVolts(volt);
+    rightMotor.setBatteryVolts(volt);
+}
+
+MotionControl motionControl(&leftServo, &rightServo);
+
+ASMR asmr(&motionControl);

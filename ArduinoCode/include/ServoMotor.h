@@ -29,14 +29,14 @@ public:
         enc->init();
         motor->init(DIR, dirPin, pwmPin);
     }   
-    ServoMotor& drive(float omega, float batteryVolts) // [рад/с]
+    ServoMotor& drive(float omega) // [рад/с]
     {
         enc->tick();
-        motor->tick(batteryVolts);
-        est->tick();
+        est->tick(enc->q_Phi);
 
         motReg->tick(omega - realSpeed);
-        Serial.println(String(omega) + " " + String(realSpeed));
+
+        //Serial.println(String(omega) + " " + String(realSpeed) + " " + String(motReg->uOut));
         motor->drive(motReg->uOut);
         
         //motor.drive(4);
