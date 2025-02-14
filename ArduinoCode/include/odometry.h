@@ -18,7 +18,8 @@ private:
     Integrator
     X,
     Y,
-    Theta;
+    Theta,
+    Distance;
 
     float
     vL = 0,
@@ -27,8 +28,8 @@ private:
     vY,
     v;
 public:
-    const float &x, &y, &theta;
-    State() : theta(Theta.out), x(X.out), y(Y.out) {}
+    const float &x, &y, &theta, &dist;
+    State() : theta(Theta.out), x(X.out), y(Y.out), dist(Distance.out) {}
     
     void update(float omegaL, float omegaR)
     {
@@ -42,7 +43,20 @@ public:
         vX = v * cos(theta);
         vY = v * sin(theta);
 
+        Distance.tick(v);
         X.tick(vX);
         Y.tick(vY);
+    }
+    void reset()
+    {
+        vL = 0;
+        vR = 0;
+        vX = 0;
+        vY = 0;
+        v = 0;
+        X.reset();
+        Y.reset();
+        Theta.reset();
+        Distance.reset();
     }
 };

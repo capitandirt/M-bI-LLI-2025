@@ -10,6 +10,7 @@
 #include "ServoMotor.h"
 #include "MotionControl.h"
 #include "ASMR.h"
+#include "Maze.h"
 
 EncoderParameters left_ep = 
 {
@@ -66,3 +67,5 @@ void BatteryTick()
 MotionControl motionControl(&leftServo, &rightServo);
 
 ASMR asmr(&motionControl);
+
+Maze maze;

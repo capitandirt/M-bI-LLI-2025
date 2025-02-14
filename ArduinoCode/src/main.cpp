@@ -10,9 +10,11 @@ void setup()
   initMotors();
   Serial.begin(115200);
 
-
-  asmr.addCyc(SS90EL);
+  //asmr.addCyc(SS90EL);
+  asmr.addCyc(SD135SR);
   asmr.addCyc(STOP);
+  maze.printMaze();
+  while(true);
 }
 
 void loop()
@@ -50,5 +52,25 @@ void loop()
   
   //leftServo.drive(6.28, battery.volts);
   //rightMotor.drive(Wr_in);
-  asmr.exec();
+  switch (funcCelect.function)
+  {
+  case 0: //рабочий режим
+  {
+    asmr.exec();
+  }
+  break;
+  case 1: //Serial test
+  {
+    Serial.println("test Serial");
+  }
+  case 2:
+  {
+    Serial.println(battery.volts);
+  }
+  break;
+  default:
+  Serial.println("idk what to do");
+  break;
+  }
+  
 }

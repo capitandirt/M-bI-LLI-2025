@@ -11,6 +11,10 @@ public:
     {
         private_out += in * Ts_s;
     }
+    void reset()
+    {
+        private_out = 0;
+    }
 };
 
 class PIreg
