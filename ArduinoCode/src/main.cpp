@@ -2,6 +2,8 @@
 #include "velEstimator.h"
 #include "Globals.h"
 #include "tau.h"
+#include "Maze.h"
+#include "mazePrint.h" 
 
 
 void setup()
@@ -13,7 +15,25 @@ void setup()
   //asmr.addCyc(SS90EL);
   asmr.addCyc(SD135SR);
   asmr.addCyc(STOP);
-  maze.printMaze();
+
+
+  maze.setWall({0,0}, {NO, YES, YES, NO});
+  maze.setWall({1,0}, {YES, NO, YES, NO});
+  maze.setWall({2,0}, {NO, NO, YES, YES});
+  maze.setWall({0,1}, {NO, YES, NO, YES});
+  maze.setWall({1,1}, {YES, YES, YES, NO});
+  maze.setWall({2,1}, {NO, NO, NO, YES});
+  maze.setWall({0,2}, {YES, YES, NO, NO});
+  maze.setWall({1,2}, {YES, NO, YES, YES});
+  maze.setWall({2,2}, {YES, YES, NO, YES});
+  Serial.println("maze created");
+  solver.solve({1,2}, {2,2}, &maze); 
+  Serial.println("maze solved");
+  //solver.writePath({2,2}, {1,2});
+  
+  
+  printMaze(&maze);
+  Serial.println("\nmaze printed\n");
   while(true);
 }
 

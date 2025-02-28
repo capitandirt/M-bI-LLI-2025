@@ -1,26 +1,40 @@
 #pragma once
 #include "Arduino.h"
 #include "ASMR.h"
-struct Vec2
+#include "Vec2.h"
+
+enum WallState: byte
 {
-    int x, y;
+    UNDEFINED,
+    NO,
+    YES
 };
+
+struct CellWalls
+    {
+        WallState down : 2; //bitfield, эта ПЕРЕМЕННАЯ занимает ровно 2 бита, кайф вообще
+        WallState left : 2;
+        WallState up : 2;
+        WallState right : 2;
+        CellWalls(byte down_ = UNDEFINED, byte left_ = UNDEFINED, byte up_ = UNDEFINED, byte right_ = UNDEFINED)   
+        {
+            down = (WallState)down_;
+            left = (WallState)left_;
+            up = (WallState)up_;
+            right = (WallState)right_;
+        }
+    };
 
 #define MAZE_MEMORY_SIZE (MAZE_SIZE*MAZE_SIZE)
 
 #define SET_WALL(wallStoraged, wall) wallStoraged = ((wallStoraged) != UNDEFINED ? (wall) : (wallStoraged))
 
 #define cellXY(x, y) (data[MAZE_SIZE *  (y) + (x)])
+#define cellVec(coord) (data[MAZE_SIZE *  (coord.y) + (coord.x)])
 
 class Maze
 {
 private:
-    enum WALL_STATE: byte
-    {
-        UNDEFINED,
-        NO,
-        YES
-    };
     enum Wall: byte
     {
         DOWN,
@@ -28,53 +42,38 @@ private:
         UP,
         RIGHT
     };
-    struct Cell
-    {
-        Wall down : 2; //bitfield, эта ПЕРЕМЕННАЯ занимает ровно 2 бита, кайф вообще
-        Wall left : 2;
-        Wall up : 2;
-        Wall right : 2;
-    };
     struct CellStorageUnit
     {
-        Wall right : 2;
-        Wall down : 2;
+        WallState right : 2;
+        WallState down : 2;
     };
     CellStorageUnit data[MAZE_MEMORY_SIZE];
 public:
-    Cell getWalls(Vec2 coord)
+    Maze()
     {
-        
-    }
-    void setWall(Vec2 coord, Cell walls)
-    {
-        SET_WALL(cellXY(coord.x, coord.y).down, walls.down);
-        SET_WALL(cellXY(coord.x, coord.y).right, walls.right);
-    }
-    void printMaze()
-    {
-        Serial.println("\n\n");
-        Serial.print("+");
-        for(int j = 0; j < MAZE_SIZE; j++)
+        for(int i = 0; i < MAZE_MEMORY_SIZE; i++)
         {
-            Serial.print(String(" - ") + "+");
+            data[i].right = UNDEFINED;
+            data[i].down = UNDEFINED;
         }
-        for(int i = 0; i < MAZE_SIZE; i++)
-        {
-            Serial.print("\n|");
-            for(int j = 0; j < MAZE_SIZE; j++)
-            {
-                Serial.print(String("   "));
-                if(cellXY(i, j).right) Serial.print("|");
-                else Serial.print(".");
-            }
-            Serial.print("\n+");
-            for(int j = 0; j < MAZE_SIZE; j++)
-            {
-                if(cellXY(i, j).down) Serial.print(" - ");
-                else Serial.print(" . ");
-                Serial.print("+");
-            }
-        }
+    }
+    CellWalls getWalls(Vec2 coord) const //конст метод никак не изменяет класс, поэтому const ставится после
+    {
+        CellWalls walls;
+        walls.down = cellXY(coord.x, coord.y).down;
+        walls.right = cellXY(coord.x, coord.y).right;
+        walls.left = cellXY(coord.x - 1, coord.y).right;
+        walls.up = cellXY(coord.x, coord.y - 1).down;
+        return walls;
+    }
+    // {DOWN, LEFT, UP, RIGHT}  
+    void setWall(Vec2 coord, CellWalls walls)
+    {
+        cellXY(coord.x, coord.y).down = walls.down;
+        cellXY(coord.x, coord.y).right = walls.right;
+        cellXY(coord.x - 1, coord.y).right = walls.left;        
+        cellXY(coord.x, coord.y - 1).down = walls.up;
     }
 };
+
+#undef CellXY

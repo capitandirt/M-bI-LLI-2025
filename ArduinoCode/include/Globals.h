@@ -11,6 +11,7 @@
 #include "MotionControl.h"
 #include "ASMR.h"
 #include "Maze.h"
+#include "Solver.h"
 
 EncoderParameters left_ep = 
 {
@@ -69,3 +70,4 @@ MotionControl motionControl(&leftServo, &rightServo);
 ASMR asmr(&motionControl);
 
 Maze maze;
+Solver solver;

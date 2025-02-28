@@ -49,4 +49,4 @@
 #define FORW_SPEED 0.2 // скорость робота вперёд по-умолчанию [м/с]
 #define CELL_LENGTH 0.18 // длинна клетки [м]
 #define CYC_BUF_SIZE 64 // длинна буфера циклограмм
-#define MAZE_SIZE 16
+#define MAZE_SIZE 3
