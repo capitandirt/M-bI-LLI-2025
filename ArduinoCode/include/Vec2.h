@@ -2,7 +2,7 @@
 class Vec2
 {
 public:
-    int x, y;
+    int8_t x, y;
     bool operator ==(const Vec2& second) const
     {
         return x == second.x && y == second.y;

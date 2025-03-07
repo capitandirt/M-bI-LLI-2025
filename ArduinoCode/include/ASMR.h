@@ -194,6 +194,7 @@ private:
     int rotMod(int in)
     {
         return in % CYC_BUF_SIZE;
+        sizeof(cycCicle[0]);
     }
 public:
     ASMR(MotionControl* motionControl_) : motionControl(motionControl_){}

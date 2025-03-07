@@ -6,7 +6,6 @@
 void printMaze(Maze *maze, Solver *solver)
 {
     Serial.println("\nstart print\n");
-    Serial.println(String(123));
     Serial.print(" ");
     for (int j = 0; j < MAZE_SIZE; j++)
     {
@@ -24,7 +23,7 @@ void printMaze(Maze *maze, Solver *solver)
         {
             char symbols[] = {'U', 'D', 'L', 'R', 'X'};
             Serial.print(" " + 
-                         String( symbols[int(solver->parent[j][i])] )
+                         String( symbols[int(solver->whereFrom[j][i])] )
                          + " "); 
             CellWalls walls = maze->getWalls({j, i});
             // CellWalls walls = CellWalls(YES, YES, YES, YES);

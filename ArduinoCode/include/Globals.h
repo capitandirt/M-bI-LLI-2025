@@ -71,3 +71,9 @@ ASMR asmr(&motionControl);
 
 Maze maze;
 Solver solver;
+
+
+void check()
+{
+    sizeof(solver);
+}

@@ -56,6 +56,7 @@ public:
     }
 };
 
+#define MAX_PATH_SIZE (MAZE_SIZE * MAZE_SIZE - 1)
 
 class Solver
 {
@@ -70,15 +71,17 @@ private:
         UNDEFINED
     };
 public:
-    fromDirection parent[MAZE_SIZE][MAZE_SIZE] = {fromDirection::UNDEFINED};
-    fromDirection path[255];
+    fromDirection whereFrom[MAZE_SIZE][MAZE_SIZE] = {fromDirection::UNDEFINED};
+    
+    fromDirection path[MAX_PATH_SIZE];
+    uint8_t pathEndIndex = 255;
     void solve(Vec2 start, Vec2 finish, const Maze* maze)
     {
         for(int i = 0; i < MAZE_SIZE; i++)
         {
             for(int j = 0; j < MAZE_SIZE; j++)
             {
-                parent[i][j] = fromDirection::UNDEFINED;
+                whereFrom[i][j] = fromDirection::UNDEFINED;
             }
         }
         
@@ -86,6 +89,10 @@ public:
         int counter = 0;
         while(!queue.isEmpty())
         {
+            sizeof(Vec2);
+            sizeof(queue);
+            sizeof(whereFrom);
+            sizeof(path);
             Vec2 correct = queue.pop_front();
             Serial.print(" correct: " + correct.string());
             CellWalls cell = maze->getWalls(correct);
@@ -107,108 +114,126 @@ public:
             Serial.print(String(symbols[(int)cell.down]) + " ");
             Serial.print(String(symbols[(int)cell.left]) + " "); 
             Serial.print(String(symbols[(int)cell.up]) + " "); 
-            Serial.print(String(symbols[(int)cell.right]) + " ");  
-            if(cell.left == PASS)
+            Serial.println(String(symbols[(int)cell.right]) + " ");  
+            if(cell.left != WALL)
             {
                 Vec2 left = {correct.x - 1, correct.y};
                 //Serial.println("left: " + left.string() + " finish: " + finish.string()); 
                 if(left != finish)
                 {
-                    if(parent[left.x][left.y] == fromDirection::UNDEFINED)
+                    if(whereFrom[left.x][left.y] == fromDirection::UNDEFINED)
                     {
                         queue.push_back(left);
-                        parent[left.x][left.y] = fromDirection::RIGHT;
+                        whereFrom[left.x][left.y] = fromDirection::RIGHT;
                         Serial.println("push left");
                     }
                 }
                 else
                 {
+                    whereFrom[left.x][left.y] = fromDirection::RIGHT;
                     Serial.println(" left is finish"); 
                     return;
                 }
             }
-            if(cell.up == PASS)
+            if(cell.up != WALL)
             {
                 Vec2 up = {correct.x, correct.y - 1};
                 if(up != finish)
                 {
-                    if(parent[up.x][up.y] == fromDirection::UNDEFINED)
+                    if(whereFrom[up.x][up.y] == fromDirection::UNDEFINED)
                     {
                         queue.push_back(up);
-                        parent[up.x][up.y] = fromDirection::DOWN;
+                        whereFrom[up.x][up.y] = fromDirection::DOWN;
                         Serial.println("push up");
                     }
                 }
                 else
                 {
-                    Serial.println(" left is finish");
+                    whereFrom[up.x][up.y] = fromDirection::DOWN;
+                    Serial.println(" up is finish");
                     return;
                 }
             }
-            if(cell.right == PASS)
+            if(cell.right != WALL)
             {
                 Vec2 right = {correct.x + 1, correct.y};
                 if(right != finish)
                 {
-                    if(parent[right.x][right.y] == fromDirection::UNDEFINED)
+                    if(whereFrom[right.x][right.y] == fromDirection::UNDEFINED)
                     {
                         queue.push_back(right);
-                        parent[right.x][right.y] = fromDirection::LEFT;
+                        whereFrom[right.x][right.y] = fromDirection::LEFT;
                         Serial.println("push right");
                     }
                 }
                 else
                 {
-                    Serial.println(" left is finish");
+                    whereFrom[right.x][right.y] = fromDirection::LEFT;
+                    Serial.println(" right is finish");
                     return;
                 }
             }
-            if(cell.down == PASS)
+            if(cell.down != WALL)
             {
                 Vec2 down = {correct.x, correct.y + 1};
                 if(down != finish)
                 {
-                    if(parent[down.x][down.y] == fromDirection::UNDEFINED)
+                    if(whereFrom[down.x][down.y] == fromDirection::UNDEFINED)
                     {
                         queue.push_back(down);
-                        parent[down.x][down.y] = fromDirection::UP;
+                        whereFrom[down.x][down.y] = fromDirection::UP;
                         Serial.println("push down");
                     }
                 }
                 else
                 {
-                    Serial.println(" left is finish");
+                    whereFrom[down.x][down.y] = fromDirection::UP;
+                    Serial.println(" down is finish");
                     return;
                 }
             }
             counter++;
         }
     }
-    void writePath(Vec2 finish, Vec2 start)
+    void writePath(Vec2 start, Vec2 finish)
     {
         Serial.println("path:");
-        Vec2 iterator = finish;
-        Serial.println("imalive1");
-        for(int i = 0; iterator != start; i++)
+        Vec2 correct = finish;
+        //Serial.println("imalive1");
+        for(int i = 0; correct != start; i++)
         {
-            path[i] = parent[iterator.x][iterator.y];
-            if(path[i] == fromDirection::DOWN) iterator = {iterator.x, iterator.y + 1};
-            else if(path[i] == fromDirection::UP) iterator = {iterator.x, iterator.y - 1};
-            else if(path[i] == fromDirection::LEFT) iterator = {iterator.x - 1, iterator.y};
-            else if(path[i] == fromDirection::RIGHT) iterator = {iterator.x + 1, iterator.y};
-            Serial.println("imalive" + String(i));
+            path[i] = whereFrom[correct.x][correct.y];
+            if(whereFrom[correct.x][correct.y] == fromDirection::LEFT) correct = correct + Vec2{-1, 0};
+            else if(whereFrom[correct.x][correct.y] == fromDirection::RIGHT) correct = correct + Vec2{1, 0};
+            else if(whereFrom[correct.x][correct.y] == fromDirection::UP) correct = correct + Vec2{0, -1};
+            else if(whereFrom[correct.x][correct.y] == fromDirection::DOWN) correct = correct + Vec2{0, 1};
+            if(i >= 256) 
+            {
+                Serial.println("error infinite loop path");
+                break;
+            }
+            pathEndIndex = i;
         }
+    }
+    fromDirection nextPathCell()
+    {
+        return fromDirection(((int)path[pathEndIndex] + 2) % 4);  
     }
     void printPath()
     {
-        for(int i = 0; path[i] != fromDirection::UNDEFINED; i++)
+        Serial.print("startPath: ");
+        for(int i = 0; i < MAX_PATH_SIZE; i++) // на самом деле цикл кончается раньше, когда закончатся все элементы массива из списка L U R D
         {
             if(path[i] == fromDirection::DOWN) Serial.print("D");
             else if(path[i] == fromDirection::UP) Serial.print("U");
             else if(path[i] == fromDirection::LEFT) Serial.print("L");
             else if(path[i] == fromDirection::RIGHT) Serial.print("R");
+            else 
+            {
+                break;
+            }
             Serial.print(" ");
         }
-        Serial.println();
+        Serial.println(" endPath");
     }
 };

@@ -60,8 +60,10 @@ public:
     CellWalls getWalls(Vec2 coord) const //конст метод никак не изменяет класс, поэтому const ставится после
     {
         CellWalls walls;
-        walls.down = cellXY(coord.x, coord.y).down;
-        walls.right = cellXY(coord.x, coord.y).right;
+        if(coord.y != MAZE_SIZE - 1 ) walls.down = cellXY(coord.x, coord.y).down;
+        else walls.down = WALL;
+        if(coord.x != MAZE_SIZE - 1 ) walls.right = cellXY(coord.x, coord.y).right;  
+        else walls.right = WALL;
         if(coord.x != 0 && coord.x) walls.left = cellXY(coord.x - 1, coord.y).right;
         else walls.left = WALL;
         if(coord.y != 0 && coord.y) walls.up = cellXY(coord.x, coord.y - 1).down;
