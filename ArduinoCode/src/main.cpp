@@ -16,24 +16,27 @@ void setup()
   asmr.addCyc(SD135SR);
   asmr.addCyc(STOP);
 
-
-  maze.setWall({0,0}, {NO, YES, YES, NO});
-  maze.setWall({1,0}, {YES, NO, YES, NO});
-  maze.setWall({2,0}, {NO, NO, YES, YES});
-  maze.setWall({0,1}, {NO, YES, NO, YES});
-  maze.setWall({1,1}, {YES, YES, YES, NO});
-  maze.setWall({2,1}, {NO, NO, NO, YES});
-  maze.setWall({0,2}, {YES, YES, NO, NO});
-  maze.setWall({1,2}, {YES, NO, YES, YES});
-  maze.setWall({2,2}, {YES, YES, NO, YES});
+  maze.setWall({0,0}, {PASS, WALL, WALL, PASS});
+  maze.setWall({1,0}, {WALL, PASS, WALL, PASS});
+  maze.setWall({2,0}, {PASS, PASS, WALL, WALL});
+  maze.setWall({0,1}, {PASS, WALL, PASS, WALL});
+  maze.setWall({1,1}, {WALL, WALL, WALL, PASS});
+  maze.setWall({2,1}, {PASS, PASS, PASS, WALL});
+  maze.setWall({0,2}, {WALL, WALL, PASS, PASS});
+  maze.setWall({1,2}, {WALL, PASS, WALL, WALL});
+  maze.setWall({2,2}, {WALL, WALL, PASS, WALL});
   Serial.println("maze created");
+
+  
   solver.solve({1,2}, {2,2}, &maze); 
   Serial.println("maze solved");
-  //solver.writePath({2,2}, {1,2});
+  printMaze(&maze, &solver);
   
+  solver.writePath({2,2}, {1,2});
+  solver.printPath();
   
-  printMaze(&maze);
-  Serial.println("\nmaze printed\n");
+  Serial.println(String(123) + " start");
+  // Serial.println("\nmaze printed\n");
   while(true);
 }
 

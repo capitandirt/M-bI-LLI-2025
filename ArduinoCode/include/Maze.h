@@ -6,8 +6,8 @@
 enum WallState: byte
 {
     UNDEFINED,
-    NO,
-    YES
+    PASS,
+    WALL
 };
 
 struct CellWalls
@@ -62,8 +62,10 @@ public:
         CellWalls walls;
         walls.down = cellXY(coord.x, coord.y).down;
         walls.right = cellXY(coord.x, coord.y).right;
-        walls.left = cellXY(coord.x - 1, coord.y).right;
-        walls.up = cellXY(coord.x, coord.y - 1).down;
+        if(coord.x != 0 && coord.x) walls.left = cellXY(coord.x - 1, coord.y).right;
+        else walls.left = WALL;
+        if(coord.y != 0 && coord.y) walls.up = cellXY(coord.x, coord.y - 1).down;
+        else walls.up = WALL;
         return walls;
     }
     // {DOWN, LEFT, UP, RIGHT}  
