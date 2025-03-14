@@ -1,7 +1,7 @@
 #pragma once
 #include "Arduino.h"
 #include "ASMR.h"
-#include "Vec2.h"
+#include "MazeCoord.h"
 
 enum WallState: byte
 {
@@ -35,13 +35,6 @@ struct CellWalls
 class Maze
 {
 private:
-    enum Wall: byte
-    {
-        DOWN,
-        LEFT,
-        UP,
-        RIGHT
-    };
     struct CellStorageUnit
     {
         WallState right : 2;
@@ -57,7 +50,7 @@ public:
             data[i].down = UNDEFINED;
         }
     }
-    CellWalls getWalls(Vec2 coord) const //конст метод никак не изменяет класс, поэтому const ставится после
+    CellWalls getWalls(MazeCoord coord) const //конст метод никак не изменяет класс, поэтому const ставится после
     {
         CellWalls walls;
         if(coord.y != MAZE_SIZE - 1 ) walls.down = cellXY(coord.x, coord.y).down;
@@ -71,7 +64,7 @@ public:
         return walls;
     }
     // {DOWN, LEFT, UP, RIGHT}  
-    void setWall(Vec2 coord, CellWalls walls)
+    void setWall(MazeCoord coord, CellWalls walls)
     {
         cellXY(coord.x, coord.y).down = walls.down;
         cellXY(coord.x, coord.y).right = walls.right;

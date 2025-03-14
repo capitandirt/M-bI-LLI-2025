@@ -1,6 +1,8 @@
 #pragma once
 #include "config.h"
 #include "tau.h"
+#include "MazeCoord.h"
+#include "Direction.h"
 
 void polarSpeedToMotorSpeed(float Vin, float theta_i_in, float* omega_l, float* omega_r)
 {
@@ -27,8 +29,11 @@ private:
     vX,
     vY,
     v;
+
+    MazeCoord coord = {0, 0};
 public:
     const float &x, &y, &theta, &dist;
+    const MazeCoord &coord_out = coord;
     State() : theta(Theta.out), x(X.out), y(Y.out), dist(Distance.out) {}
     
     void update(float omegaL, float omegaR)
@@ -46,6 +51,31 @@ public:
         Distance.tick(v);
         X.tick(vX);
         Y.tick(vY);
+    }
+    void updateCoord(Direction::Dir dir)
+    {
+        switch(dir)
+        {
+            case Direction::Dir::UP:
+            {
+                coord.y--;
+            }
+            break;
+            case Direction::Dir::DOWN:
+            {
+                coord.y++;
+            }
+            break;
+            case Direction::Dir::LEFT:
+            {
+                coord.x--;
+            }
+            break;
+            case Direction::Dir::RIGHT:
+            {
+                coord.x++;
+            }
+        }
     }
     void reset()
     {

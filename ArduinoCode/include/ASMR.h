@@ -179,9 +179,15 @@ CYCLOGRAM(SD135SR)
     if(s.state.dist > forwDist1 && s.state.dist < forwDist1 + circleDis) ms->theta_i0 = -theta_i;
     else ms->theta_i0 = 0;
     if(s.state.dist > forwDist1 + circleDis + forwDist2) ms->isComplete = true;
-
-    Serial.println(String(forwDist1) + "\t" + String(circleDis) + "\t" + String(forwDist2) + "\t");
 }
+CYCLOGRAM(SS180S)
+{
+    ms->v_f0 = 0;
+    float theta_i = FORW_SPEED / ROBOT_WIDTH / 2;
+
+    if(s.state.theta > PI) ms->isComplete = true;
+}
+
 
 class ASMR
 {
@@ -194,7 +200,6 @@ private:
     int rotMod(int in)
     {
         return in % CYC_BUF_SIZE;
-        sizeof(cycCicle[0]);
     }
 public:
     ASMR(MotionControl* motionControl_) : motionControl(motionControl_){}
@@ -204,7 +209,7 @@ public:
         cycCicle[progEnd] = cyc;
     }
 
-    void exec()
+    bool exec()
     {
         static Sensors s = {0};
         MotionState ms = {0};
@@ -229,5 +234,7 @@ public:
             //Serial.println(String(omegaL) + " " + String(omegaR) + " " + String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(s.state.dist));
         }
         motionControl->tick(ms.v_f0, ms.theta_i0);
+        if(ms.isComplete) return true;
+        else return false;
     }
 };

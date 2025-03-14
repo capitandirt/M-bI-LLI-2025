@@ -1,21 +1,22 @@
 #pragma once
-class Vec2
+#include "Arduino.h"
+class MazeCoord
 {
 public:
     int8_t x, y;
-    bool operator ==(const Vec2& second) const
+    bool operator ==(const MazeCoord& second) const
     {
         return x == second.x && y == second.y;
     } 
-    bool operator !=(const Vec2& second) const
+    bool operator !=(const MazeCoord& second) const
     {
         return x != second.x || y != second.y;
     }
-    Vec2 operator +(const Vec2& second) const
+    MazeCoord operator +(const MazeCoord& second) const
     {
         return {x + second.x, y + second.y};
     }
-    Vec2 operator -(const Vec2& second) const
+    MazeCoord operator -(const MazeCoord& second) const
     {
         return {x - second.x, y - second.y};
     }

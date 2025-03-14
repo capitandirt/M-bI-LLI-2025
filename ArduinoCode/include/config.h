@@ -50,3 +50,4 @@
 #define CELL_LENGTH 0.18 // длинна клетки [м]
 #define CYC_BUF_SIZE 64 // длинна буфера циклограмм
 #define MAZE_SIZE 11
+#define FINISH_CELL {(MAZE_SIZE) / 2, (MAZE_SIZE) / 2} //финишная клетка // не надо делать +1 в рассчётах т.к. корды начинаются с нуля

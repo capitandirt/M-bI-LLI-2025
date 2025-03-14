@@ -16,10 +16,10 @@ void printMaze(Maze *maze, Solver *solver)
     {
         Serial.print("---+");
     }
-    for (int i = 0; i < MAZE_SIZE; i++)
+    for (int8_t i = 0; i < MAZE_SIZE; i++)
     {
         Serial.print("\n|");
-        for (int j = 0; j < MAZE_SIZE; j++)
+        for (int8_t j = 0; j < MAZE_SIZE; j++)
         {
             char symbols[] = {'U', 'D', 'L', 'R', ' '};
             Serial.print(" " + 

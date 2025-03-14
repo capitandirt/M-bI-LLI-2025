@@ -1,5 +1,5 @@
 #pragma once
-#include "Vec2.h"
+#include "MazeCoord.h"
 #include "Maze.h"
 #include "config.h"
 
@@ -61,13 +61,13 @@ public:
 class Solver
 {
 private:
-    Queue<Vec2> queue; 
+    Queue<MazeCoord> queue; 
     enum class fromDirection : uint8_t
     {
-        UP,
-        DOWN,
         LEFT,
+        UP,
         RIGHT,
+        DOWN,
         UNDEFINED
     };
 public:
@@ -75,7 +75,7 @@ public:
     
     fromDirection path[MAX_PATH_SIZE];
     uint8_t pathEndIndex = 255;
-    void solve(Vec2 start, Vec2 finish, const Maze* maze)
+    void solve(MazeCoord start, MazeCoord finish, const Maze* maze)
     {
         for(int i = 0; i < MAZE_SIZE; i++)
         {
@@ -89,11 +89,7 @@ public:
         int counter = 0;
         while(!queue.isEmpty())
         {
-            sizeof(Vec2);
-            sizeof(queue);
-            sizeof(whereFrom);
-            sizeof(path);
-            Vec2 correct = queue.pop_front();
+            MazeCoord correct = queue.pop_front();
             Serial.print(" correct: " + correct.string());
             CellWalls cell = maze->getWalls(correct);
             Serial.print("counter: " + String(counter) + " ");
@@ -117,7 +113,7 @@ public:
             Serial.println(String(symbols[(int)cell.right]) + " ");  
             if(cell.left != WALL)
             {
-                Vec2 left = {correct.x - 1, correct.y};
+                MazeCoord left = {correct.x - 1, correct.y};
                 //Serial.println("left: " + left.string() + " finish: " + finish.string()); 
                 if(left != finish)
                 {
@@ -137,7 +133,7 @@ public:
             }
             if(cell.up != WALL)
             {
-                Vec2 up = {correct.x, correct.y - 1};
+                MazeCoord up = {correct.x, correct.y - 1};
                 if(up != finish)
                 {
                     if(whereFrom[up.x][up.y] == fromDirection::UNDEFINED)
@@ -156,7 +152,7 @@ public:
             }
             if(cell.right != WALL)
             {
-                Vec2 right = {correct.x + 1, correct.y};
+                MazeCoord right = {correct.x + 1, correct.y};
                 if(right != finish)
                 {
                     if(whereFrom[right.x][right.y] == fromDirection::UNDEFINED)
@@ -175,7 +171,7 @@ public:
             }
             if(cell.down != WALL)
             {
-                Vec2 down = {correct.x, correct.y + 1};
+                MazeCoord down = {correct.x, correct.y + 1};
                 if(down != finish)
                 {
                     if(whereFrom[down.x][down.y] == fromDirection::UNDEFINED)
@@ -195,18 +191,18 @@ public:
             counter++;
         }
     }
-    void writePath(Vec2 start, Vec2 finish)
+    void writePath(MazeCoord start, MazeCoord finish)
     {
         Serial.println("path:");
-        Vec2 correct = finish;
+        MazeCoord correct = finish;
         //Serial.println("imalive1");
         for(int i = 0; correct != start; i++)
         {
             path[i] = whereFrom[correct.x][correct.y];
-            if(whereFrom[correct.x][correct.y] == fromDirection::LEFT) correct = correct + Vec2{-1, 0};
-            else if(whereFrom[correct.x][correct.y] == fromDirection::RIGHT) correct = correct + Vec2{1, 0};
-            else if(whereFrom[correct.x][correct.y] == fromDirection::UP) correct = correct + Vec2{0, -1};
-            else if(whereFrom[correct.x][correct.y] == fromDirection::DOWN) correct = correct + Vec2{0, 1};
+            if(whereFrom[correct.x][correct.y] == fromDirection::LEFT) correct = correct + MazeCoord{-1, 0};
+            else if(whereFrom[correct.x][correct.y] == fromDirection::RIGHT) correct = correct + MazeCoord{1, 0};
+            else if(whereFrom[correct.x][correct.y] == fromDirection::UP) correct = correct + MazeCoord{0, -1};
+            else if(whereFrom[correct.x][correct.y] == fromDirection::DOWN) correct = correct + MazeCoord{0, 1};
             if(i >= 256) 
             {
                 Serial.println("error infinite loop path");
@@ -215,9 +211,9 @@ public:
             pathEndIndex = i;
         }
     }
-    fromDirection nextPathCell()
+    Direction::Dir nextPathCell()
     {
-        return fromDirection(((int)path[pathEndIndex] + 2) % 4);
+        return Direction::Dir(((int)path[pathEndIndex] + 2) % 4);
     }
     void printPath()
     {

@@ -25,19 +25,14 @@ void setup()
   // maze.setWall({0,2}, {WALL, WALL, PASS, PASS});
   // maze.setWall({1,2}, {WALL, PASS, WALL, WALL});
   // maze.setWall({2,2}, {WALL, WALL, PASS, WALL});
-  Serial.println("maze created");
 
   
-  solver.solve({1,2}, {7,9}, &maze); 
-  Serial.println("maze solved");
-  printMaze(&maze, &solver);
+  solver.solve({1,2}, {7,9}, &maze);
   
   //Serial.print("nextCell: " + solver.nextPathCell({1,2}).string());
   solver.writePath({1,2}, {7,9});
   solver.printPath();
-  
-  Serial.println("\nmaze printed\n");
-  while(true);
+
 }
 
 void loop()
@@ -77,22 +72,51 @@ void loop()
   //rightMotor.drive(Wr_in);
   switch (funcCelect.function)
   {
-  case 0: //рабочий режим
-  {
-    asmr.exec();
-  }
-  break;
-  case 1: //Serial test
-  {
-    Serial.println("test Serial");
-  }
-  case 2:
-  {
-    Serial.println(battery.volts);
-  }
-  break;
-  default:
-  Serial.println("idk what to do");
-  break;
+    case 0: //рабочий режим
+    {
+      if(asmr.exec())
+      {
+        double correctRadAngle = (fmod(state.theta, 2*PI));
+        Direction::Dir correctDir;
+        
+        solver.solve(state.coord_out, FINISH_CELL, &maze);
+        Direction::Dir next = solver.nextPathCell();
+        state.updateCoord(next);
+        Direction::Dir releativeDirection = Direction::Dir(int(next) - int(correctDir));
+        switch(releativeDirection)
+        {
+          case Direction::Dir::UP:
+          {
+            asmr.addCyc(FWD);
+          }break;
+          case Direction::Dir::RIGHT:
+          {
+            asmr.addCyc(SS90ER);
+          };
+          case Direction::Dir::DOWN:
+          {
+            asmr.addCyc(SS180S);
+            asmr.addCyc(FWD);
+          };
+          case Direction::Dir::LEFT:
+          {
+            asmr.addCyc(SS90EL);
+          };
+        }
+      }
+    }
+    break;
+    case 1: //Serial test
+    {
+      Serial.println("test Serial");
+    }
+    case 2:
+    {
+      Serial.println(battery.volts);
+    }
+    break;
+    default:
+    Serial.println("idk what to do");
+    break;
   }
 }
