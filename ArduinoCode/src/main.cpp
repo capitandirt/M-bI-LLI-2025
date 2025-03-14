@@ -28,12 +28,12 @@ void setup()
   Serial.println("maze created");
 
   
-  solver.solve({1,2}, {3,3}, &maze); 
+  solver.solve({1,2}, {7,9}, &maze); 
   Serial.println("maze solved");
   printMaze(&maze, &solver);
   
   //Serial.print("nextCell: " + solver.nextPathCell({1,2}).string());
-  solver.writePath({1,2}, {2,0});
+  solver.writePath({1,2}, {7,9});
   solver.printPath();
   
   Serial.println("\nmaze printed\n");

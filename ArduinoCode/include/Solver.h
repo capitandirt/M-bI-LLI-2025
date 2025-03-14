@@ -217,12 +217,12 @@ public:
     }
     fromDirection nextPathCell()
     {
-        return fromDirection(((int)path[pathEndIndex] + 2) % 4);  
+        return fromDirection(((int)path[pathEndIndex] + 2) % 4);
     }
     void printPath()
     {
         Serial.print("startPath: ");
-        for(int i = 0; i < MAX_PATH_SIZE; i++) // на самом деле цикл кончается раньше, когда закончатся все элементы массива из списка L U R D
+        for(int i = 0; i <= pathEndIndex; i++) // на самом деле цикл кончается раньше, когда закончатся все элементы массива из списка L U R D
         {
             if(path[i] == fromDirection::DOWN) Serial.print("D");
             else if(path[i] == fromDirection::UP) Serial.print("U");
@@ -234,6 +234,6 @@ public:
             }
             Serial.print(" ");
         }
-        Serial.println(" endPath");
+        Serial.println("endPath");
     }
 };

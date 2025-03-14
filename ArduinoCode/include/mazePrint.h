@@ -21,7 +21,7 @@ void printMaze(Maze *maze, Solver *solver)
         Serial.print("\n|");
         for (int j = 0; j < MAZE_SIZE; j++)
         {
-            char symbols[] = {'U', 'D', 'L', 'R', 'X'};
+            char symbols[] = {'U', 'D', 'L', 'R', ' '};
             Serial.print(" " + 
                          String( symbols[int(solver->whereFrom[j][i])] )
                          + " "); 
