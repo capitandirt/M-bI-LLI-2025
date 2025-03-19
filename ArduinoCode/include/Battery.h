@@ -6,7 +6,7 @@ private:
     float batteryVolts;
 public:
     Battery() : batteryVolts(0) {}
-    const float& volts = batteryVolts;
+    const float volts() {return batteryVolts;}
     Battery& tick() 
     {
         const float batteryDividerRatio = 2.0f;

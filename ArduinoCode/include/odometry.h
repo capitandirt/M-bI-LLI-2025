@@ -32,10 +32,16 @@ private:
 
     MazeCoord coord = {0, 0};
 public:
-    const float &x, &y, &theta, &dist;
-    const MazeCoord &coord_out = coord;
-    State() : theta(Theta.out), x(X.out), y(Y.out), dist(Distance.out) {}
+    // const float &x, &y, &theta, &dist();
+    // const MazeCoord &coord_out = coord;
+    // : theta(Theta.out), x(X.out), y(Y.out), dist()(Distance.out) {}
     
+    const float x() {return X.out;};
+    const float y() {return Y.out;};
+    const float theta() {return Theta.out;};
+    const float dist() {return Distance.out;};
+    const MazeCoord coord_out() {return coord;};
+
     void update(float omegaL, float omegaR)
     {
         vL = omegaL * WHEEL_RADIUS;
@@ -45,8 +51,8 @@ public:
         Theta.tick(theta_i);
 
         v = (vR + vL) / 2;
-        vX = v * cos(theta);
-        vY = v * sin(theta);
+        vX = v * cos(Theta.out);
+        vY = v * sin(Theta.out);
 
         Distance.tick(v);
         X.tick(vX);

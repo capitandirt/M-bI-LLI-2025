@@ -5,7 +5,7 @@
 class Motor
 {
 private:
-    int DIR, dirPin, pwmPin;
+    uint8_t DIR, dirPin, pwmPin;
     float batteryVolts;
 public:
     void init(int DIR_, int dirPin_, int pwmPin_)

@@ -4,9 +4,9 @@
 
 struct EncoderParameters
 {
-    int CLOCK_A_PIN;
-    int B_PIN;
-    int DIR;
+    int8_t CLOCK_A_PIN;
+    int8_t B_PIN;
+    int8_t DIR;
     void (*ISRfunc)();
 };
 

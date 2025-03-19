@@ -12,11 +12,11 @@ private:
     Motor* motor;
     PIreg* motReg;
 public:
-    const float& realSpeed;
-    const float& phi;
-    const float& vel;
-    const float& u;
-    ServoMotor(Encoder* enc_, VelEstimator* est_, Motor* motor_, PIreg* motReg_) : realSpeed(est_->q_omega), phi(enc->q_Phi), vel(est->q_omega), u(motReg->uOut) //последнее - 1 Вольт
+    const float phi() {return enc->q_Phi;}
+    const float vel() {return est->q_omega;}
+    const float u() {return motReg->uOut;}
+    const float realSpeed() {return est->q_omega;};
+    ServoMotor(Encoder* enc_, VelEstimator* est_, Motor* motor_, PIreg* motReg_) //последнее - 1 Вольт
     {
         enc = enc_;
         est = est_;
@@ -34,9 +34,9 @@ public:
         enc->tick();
         est->tick(enc->q_Phi);
 
-        motReg->tick(omega - realSpeed);
+        motReg->tick(omega - est->q_omega);
 
-        //Serial.println(String(omega) + " " + String(realSpeed) + " " + String(motReg->uOut));
+        //Serial.println(String(omega) + " " + String(realSpeed()) + " " + String(motReg->uOut));
         motor->drive(motReg->uOut);
         
         //motor.drive(4);

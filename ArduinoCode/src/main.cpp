@@ -16,23 +16,23 @@ void setup()
   asmr.addCyc(SD135SR);
   asmr.addCyc(STOP);
 
-  // maze.setWall({0,0}, {PASS, WALL, WALL, PASS});
-  // maze.setWall({1,0}, {WALL, PASS, WALL, PASS});
-  // maze.setWall({2,0}, {PASS, PASS, WALL, WALL});
-  // maze.setWall({0,1}, {PASS, WALL, PASS, WALL});
-  // maze.setWall({1,1}, {WALL, WALL, WALL, PASS});
-  // maze.setWall({2,1}, {PASS, PASS, PASS, WALL});
-  // maze.setWall({0,2}, {WALL, WALL, PASS, PASS});
-  // maze.setWall({1,2}, {WALL, PASS, WALL, WALL});
-  // maze.setWall({2,2}, {WALL, WALL, PASS, WALL});
+  maze.setWall({0,0}, {PASS, WALL, WALL, PASS});
+  maze.setWall({1,0}, {WALL, PASS, WALL, PASS});
+  maze.setWall({2,0}, {PASS, PASS, WALL, WALL});
+  maze.setWall({0,1}, {PASS, WALL, PASS, WALL});
+  maze.setWall({1,1}, {WALL, WALL, WALL, PASS});
+  maze.setWall({2,1}, {PASS, PASS, PASS, WALL});
+  maze.setWall({0,2}, {WALL, WALL, PASS, PASS});
+  maze.setWall({1,2}, {WALL, PASS, WALL, WALL});
+  maze.setWall({2,2}, {WALL, WALL, PASS, PASS});
 
   
   solver.solve({1,2}, {7,9}, &maze);
   
-  //Serial.print("nextCell: " + solver.nextPathCell({1,2}).string());
   solver.writePath({1,2}, {7,9});
   solver.printPath();
-
+  printMaze(&maze, &solver);
+  while(true);
 }
 
 void loop()
@@ -57,8 +57,8 @@ void loop()
   BatteryTick();
   funcCelect.tick();
 
-  const float omegaL = leftServo.realSpeed;
-  const float omegaR = rightServo.realSpeed;
+  const float omegaL = leftServo.realSpeed();
+  const float omegaR = rightServo.realSpeed();
   state.update(omegaL, omegaR);
 
 
@@ -68,7 +68,7 @@ void loop()
   ///////// ACT /////////
   // Приведение управляющих воздействий в действие и логирование данных
   
-  //leftServo.drive(6.28, battery.volts);
+  //leftServo.drive(6.28, battery.volts());
   //rightMotor.drive(Wr_in);
   switch (funcCelect.function)
   {
@@ -76,10 +76,10 @@ void loop()
     {
       if(asmr.exec())
       {
-        double correctRadAngle = (fmod(state.theta, 2*PI));
+        double correctRadAngle = (fmod(state.theta(), 2*PI));
         Direction::Dir correctDir;
         
-        solver.solve(state.coord_out, FINISH_CELL, &maze);
+        solver.solve(state.coord_out(), FINISH_CELL, &maze);
         Direction::Dir next = solver.nextPathCell();
         state.updateCoord(next);
         Direction::Dir releativeDirection = Direction::Dir(int(next) - int(correctDir));
@@ -110,13 +110,14 @@ void loop()
     {
       Serial.println("test Serial");
     }
-    case 2:
+    case 2: // проверка заряда батареи
     {
-      Serial.println(battery.volts);
+      Serial.println(battery.volts());
     }
     break;
     default:
     Serial.println("idk what to do");
+    delay(2000);
     break;
   }
 }

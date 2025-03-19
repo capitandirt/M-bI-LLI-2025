@@ -64,11 +64,11 @@ private:
     Queue<MazeCoord> queue; 
     enum class fromDirection : uint8_t
     {
+        UNDEFINED,
         LEFT,
         UP,
         RIGHT,
-        DOWN,
-        UNDEFINED
+        DOWN
     };
 public:
     fromDirection whereFrom[MAZE_SIZE][MAZE_SIZE] = {fromDirection::UNDEFINED};

@@ -47,7 +47,7 @@ CYCLOGRAM(FWD)
     ms->v_f0 = FORW_SPEED;
     ms->theta_i0 = 0;
     
-    if(s.state.dist > CELL_LENGTH)
+    if(s.state.dist() > CELL_LENGTH)
     {
         ms->isComplete = true;
     }
@@ -58,7 +58,7 @@ CYCLOGRAM(FWD_HALF)
     ms->v_f0 = FORW_SPEED;
     ms->theta_i0 = 0;
     
-    if(s.state.dist > CELL_LENGTH / 2)
+    if(s.state.dist() > CELL_LENGTH / 2)
     {
         ms->isComplete = true;
     }
@@ -77,12 +77,12 @@ CYCLOGRAM(SS90EL)
     // float forwTime = (CELL_LENGTH / 2 - R) / FORW_SPEED;
     // float circTime = 2 * PI * R / 4 / FORW_SPEED;
 
-    if(s.state.dist > forwDist && s.state.dist < forwDist + circleDis) ms->theta_i0 = theta_i;
+    if(s.state.dist() > forwDist && s.state.dist() < forwDist + circleDis) ms->theta_i0 = theta_i;
     else ms->theta_i0 = 0;
     // if(s.time < forwTime || s.time > forwTime + circTime) ms->theta_i0 = 0;
     // else ms->theta_i0 = theta_i * dir;
 
-    if(s.state.dist > 2 * forwDist + circleDis) ms->isComplete = true;
+    if(s.state.dist() > 2 * forwDist + circleDis) ms->isComplete = true;
     //if(s.time > 2 * forwTime + circTime) ms->isComplete = true;
 }
 CYCLOGRAM(SS90ER)
@@ -96,12 +96,12 @@ CYCLOGRAM(SS90ER)
     // float forwTime = (CELL_LENGTH / 2 - R) / FORW_SPEED;
     // float circTime = 2 * PI * R / 4 / FORW_SPEED;
 
-    if(s.state.dist > forwDist && s.state.dist < forwDist + circleDis) ms->theta_i0 = -theta_i;
+    if(s.state.dist() > forwDist && s.state.dist() < forwDist + circleDis) ms->theta_i0 = -theta_i;
     else ms->theta_i0 = 0;
     // if(s.time < forwTime || s.time > forwTime + circTime) ms->theta_i0 = 0;
     // else ms->theta_i0 = theta_i * dir;
 
-    if(s.state.dist > 2 * forwDist + circleDis) ms->isComplete = true;
+    if(s.state.dist() > 2 * forwDist + circleDis) ms->isComplete = true;
     //if(s.time > 2 * forwTime + circTime) ms->isComplete = true;
 }
 
@@ -116,10 +116,10 @@ CYCLOGRAM(SD45SL)
     ms->v_f0 = FORW_SPEED;
     float theta_i = FORW_SPEED / R;
 
-    if(s.state.dist > forwDist && s.state.dist < forwDist + circleDis) ms->theta_i0 = theta_i;
+    if(s.state.dist() > forwDist && s.state.dist() < forwDist + circleDis) ms->theta_i0 = theta_i;
     else ms->theta_i0 = 0;
 
-    if(s.state.dist > forwDist + circleDis + forwDist2) ms->isComplete = true;
+    if(s.state.dist() > forwDist + circleDis + forwDist2) ms->isComplete = true;
 }
 CYCLOGRAM(SD45SR)
 {
@@ -131,10 +131,10 @@ CYCLOGRAM(SD45SR)
     ms->v_f0 = FORW_SPEED;
     float theta_i = FORW_SPEED / R;
 
-    if(s.state.dist > forwDist && s.state.dist < forwDist + circleDis) ms->theta_i0 = -theta_i;
+    if(s.state.dist() > forwDist && s.state.dist() < forwDist + circleDis) ms->theta_i0 = -theta_i;
     else ms->theta_i0 = 0;
 
-    if(s.state.dist > forwDist + circleDis + forwDist2) ms->isComplete = true;
+    if(s.state.dist() > forwDist + circleDis + forwDist2) ms->isComplete = true;
 }
 CYCLOGRAM(DS45SL)
 {
@@ -146,10 +146,10 @@ CYCLOGRAM(DS45SL)
     ms->v_f0 = FORW_SPEED;
     float theta_i = FORW_SPEED / R;
 
-    if(s.state.dist > forwDist2 && s.state.dist < forwDist2 + circleDis) ms->theta_i0 = theta_i;
+    if(s.state.dist() > forwDist2 && s.state.dist() < forwDist2 + circleDis) ms->theta_i0 = theta_i;
     else ms->theta_i0 = 0;
 
-    if(s.state.dist > forwDist + circleDis + forwDist2) ms->isComplete = true;
+    if(s.state.dist() > forwDist + circleDis + forwDist2) ms->isComplete = true;
 }
 CYCLOGRAM(DS45SR)
 {
@@ -161,10 +161,10 @@ CYCLOGRAM(DS45SR)
     ms->v_f0 = FORW_SPEED;
     float theta_i = FORW_SPEED / R;
 
-    if(s.state.dist > forwDist2 && s.state.dist < forwDist2 + circleDis) ms->theta_i0 = -theta_i;
+    if(s.state.dist() > forwDist2 && s.state.dist() < forwDist2 + circleDis) ms->theta_i0 = -theta_i;
     else ms->theta_i0 = 0;
 
-    if(s.state.dist > forwDist + circleDis + forwDist2) ms->isComplete = true;
+    if(s.state.dist() > forwDist + circleDis + forwDist2) ms->isComplete = true;
 }
 CYCLOGRAM(SD135SR)
 {
@@ -176,16 +176,16 @@ CYCLOGRAM(SD135SR)
     const float forwDist2 = R + M_SQRT2 * CELL_LENGTH - R * (M_SQRT2 + 2);
     const float circleDis = (2 * PI * R) * (135.0 / 360); // 90 = четверть окружности
 
-    if(s.state.dist > forwDist1 && s.state.dist < forwDist1 + circleDis) ms->theta_i0 = -theta_i;
+    if(s.state.dist() > forwDist1 && s.state.dist() < forwDist1 + circleDis) ms->theta_i0 = -theta_i;
     else ms->theta_i0 = 0;
-    if(s.state.dist > forwDist1 + circleDis + forwDist2) ms->isComplete = true;
+    if(s.state.dist() > forwDist1 + circleDis + forwDist2) ms->isComplete = true;
 }
 CYCLOGRAM(SS180S)
 {
     ms->v_f0 = 0;
     float theta_i = FORW_SPEED / ROBOT_WIDTH / 2;
 
-    if(s.state.theta > PI) ms->isComplete = true;
+    if(s.state.theta() > PI) ms->isComplete = true;
 }
 
 
@@ -195,9 +195,9 @@ private:
     //State* state;
     MotionControl* motionControl;
     Cyclogram cycCicle[CYC_BUF_SIZE] = {IDLE};
-    int progCounter = 0, progEnd = 0;
+    uint8_t progCounter = 0, progEnd = 0;
     uint32_t lastProgStart = 0;
-    int rotMod(int in)
+    uint8_t rotMod(uint8_t in)
     {
         return in % CYC_BUF_SIZE;
     }
@@ -231,7 +231,7 @@ public:
         
         if(cycCicle[progCounter] != STOP) 
         {
-            //Serial.println(String(omegaL) + " " + String(omegaR) + " " + String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(s.state.dist));
+            //Serial.println(String(omegaL) + " " + String(omegaR) + " " + String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(s.state.dist()));
         }
         motionControl->tick(ms.v_f0, ms.theta_i0);
         if(ms.isComplete) return true;

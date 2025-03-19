@@ -60,7 +60,7 @@ void initMotors()
 
 void BatteryTick()
 {
-    float volt = battery.tick().volts;
+    float volt = battery.tick().volts();
     leftMotor.setBatteryVolts(volt);
     rightMotor.setBatteryVolts(volt);
 }
