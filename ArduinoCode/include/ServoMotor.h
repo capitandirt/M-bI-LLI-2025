@@ -36,7 +36,7 @@ public:
 
         motReg->tick(omega - est->q_omega);
 
-        //Serial.println(String(omega) + " " + String(realSpeed()) + " " + String(motReg->uOut));
+        //PRINTLN(String(omega) + " " + String(realSpeed()) + " " + String(motReg->uOut));
         motor->drive(motReg->uOut);
         
         //motor.drive(4);

@@ -36,7 +36,7 @@ public:
 
     T pop_front()
     {
-        //Serial.println("begin: " + String(begin) + " end: " + String(end) + " ");
+        //PRINTLN("begin: " + String(begin) + " end: " + String(end) + " ");
         int oldBegin = begin;
         begin = (begin + 1) % MAX_QUEUE_SIZE;
         return arr[oldBegin];
@@ -50,8 +50,8 @@ public:
 
     T operator [] (int i)
     {
-        if(i > MAX_QUEUE_SIZE) Serial.println("i'll do it, but it's out of range >");
-        else if(i < 0) Serial.println("i'll do it, but it's out of range <");
+        if(i > MAX_QUEUE_SIZE) PRINTLN("i'll do it, but it's out of range >");
+        else if(i < 0) PRINTLN("i'll do it, but it's out of range <");
         return arr[(begin + i) % MAX_QUEUE_SIZE];
     }
 };
@@ -74,6 +74,7 @@ public:
     fromDirection whereFrom[MAZE_SIZE][MAZE_SIZE] = {fromDirection::UNDEFINED};
     
     fromDirection path[MAX_PATH_SIZE];
+    
     uint8_t pathEndIndex = 255;
     void solve(MazeCoord start, MazeCoord finish, const Maze* maze)
     {
@@ -90,44 +91,44 @@ public:
         while(!queue.isEmpty())
         {
             MazeCoord correct = queue.pop_front();
-            Serial.print(" correct: " + correct.string());
+            PRINT(" correct: " + correct.string());
             CellWalls cell = maze->getWalls(correct);
-            Serial.print("counter: " + String(counter) + " ");
-            Serial.print("size: ");
-            Serial.print(queue.size());
-            Serial.print(" {");
+            PRINT("counter: " + String(counter) + " ");
+            PRINT("size: ");
+            PRINT(queue.size());
+            PRINT(" {");
             for(int i = 0; i < queue.size(); i++)
             {
-                Serial.print("{");
-                Serial.print(queue[i].x);
-                Serial.print(", ");
-                Serial.print(queue[i].y);
-                Serial.print("} ");
+                PRINT("{");
+                PRINT(queue[i].x);
+                PRINT(", ");
+                PRINT(queue[i].y);
+                PRINT("} ");
             }
-            Serial.println("}");
+            PRINTLN("}");
 
             char symbols[] = {'U', 'P', 'W'};
-            Serial.print(String(symbols[(int)cell.down]) + " ");
-            Serial.print(String(symbols[(int)cell.left]) + " "); 
-            Serial.print(String(symbols[(int)cell.up]) + " "); 
-            Serial.println(String(symbols[(int)cell.right]) + " ");  
+            PRINT(String(symbols[(int)cell.down]) + " ");
+            PRINT(String(symbols[(int)cell.left]) + " "); 
+            PRINT(String(symbols[(int)cell.up]) + " "); 
+            PRINTLN(String(symbols[(int)cell.right]) + " ");  
             if(cell.left != WALL)
             {
                 MazeCoord left = {correct.x - 1, correct.y};
-                //Serial.println("left: " + left.string() + " finish: " + finish.string()); 
+                //PRINTLN("left: " + left.string() + " finish: " + finish.string()); 
                 if(left != finish)
                 {
                     if(whereFrom[left.x][left.y] == fromDirection::UNDEFINED)
                     {
                         queue.push_back(left);
                         whereFrom[left.x][left.y] = fromDirection::RIGHT;
-                        Serial.println("push left");
+                        PRINTLN("push left");
                     }
                 }
                 else
                 {
                     whereFrom[left.x][left.y] = fromDirection::RIGHT;
-                    Serial.println(" left is finish"); 
+                    PRINTLN(" left is finish"); 
                     return;
                 }
             }
@@ -140,13 +141,13 @@ public:
                     {
                         queue.push_back(up);
                         whereFrom[up.x][up.y] = fromDirection::DOWN;
-                        Serial.println("push up");
+                        PRINTLN("push up");
                     }
                 }
                 else
                 {
                     whereFrom[up.x][up.y] = fromDirection::DOWN;
-                    Serial.println(" up is finish");
+                    PRINTLN(" up is finish");
                     return;
                 }
             }
@@ -159,13 +160,13 @@ public:
                     {
                         queue.push_back(right);
                         whereFrom[right.x][right.y] = fromDirection::LEFT;
-                        Serial.println("push right");
+                        PRINTLN("push right");
                     }
                 }
                 else
                 {
                     whereFrom[right.x][right.y] = fromDirection::LEFT;
-                    Serial.println(" right is finish");
+                    PRINTLN(" right is finish");
                     return;
                 }
             }
@@ -178,13 +179,13 @@ public:
                     {
                         queue.push_back(down);
                         whereFrom[down.x][down.y] = fromDirection::UP;
-                        Serial.println("push down");
+                        PRINTLN("push down");
                     }
                 }
                 else
                 {
                     whereFrom[down.x][down.y] = fromDirection::UP;
-                    Serial.println(" down is finish");
+                    PRINTLN(" down is finish");
                     return;
                 }
             }
@@ -193,9 +194,9 @@ public:
     }
     void writePath(MazeCoord start, MazeCoord finish)
     {
-        Serial.println("path:");
+        PRINTLN("path:");
         MazeCoord correct = finish;
-        //Serial.println("imalive1");
+        //PRINTLN("imalive1");
         for(int i = 0; correct != start; i++)
         {
             path[i] = whereFrom[correct.x][correct.y];
@@ -205,7 +206,7 @@ public:
             else if(whereFrom[correct.x][correct.y] == fromDirection::DOWN) correct = correct + MazeCoord{0, 1};
             if(i >= 256) 
             {
-                Serial.println("error infinite loop path");
+                PRINTLN("error infinite loop path");
                 break;
             }
             pathEndIndex = i;
@@ -215,21 +216,22 @@ public:
     {
         return Direction::Dir(((int)path[pathEndIndex] + 2) % 4);
     }
+
     void printPath()
     {
-        Serial.print("startPath: ");
+        PRINT("startPath: ");
         for(int i = 0; i <= pathEndIndex; i++) // на самом деле цикл кончается раньше, когда закончатся все элементы массива из списка L U R D
         {
-            if(path[i] == fromDirection::DOWN) Serial.print("D");
-            else if(path[i] == fromDirection::UP) Serial.print("U");
-            else if(path[i] == fromDirection::LEFT) Serial.print("L");
-            else if(path[i] == fromDirection::RIGHT) Serial.print("R");
+            if(path[i] == fromDirection::DOWN) PRINT("D");
+            else if(path[i] == fromDirection::UP) PRINT("U");
+            else if(path[i] == fromDirection::LEFT) PRINT("L");
+            else if(path[i] == fromDirection::RIGHT) PRINT("R");
             else 
             {
                 break;
             }
-            Serial.print(" ");
+            PRINT(" ");
         }
-        Serial.println("endPath");
+        PRINTLN("endPath");
     }
 };

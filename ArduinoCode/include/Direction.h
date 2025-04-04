@@ -1,13 +1,13 @@
 #pragma once
 #include "Arduino.h"
-class Direction
+class Direction // LEFT UP RIGHT DOWN
 {
 public:
     enum class Dir: uint8_t
     {
-        LEFT,
-        UP,
         RIGHT,
+        UP,
+        LEFT,
         DOWN,
     };
     static Dir fromRad(float rad)

@@ -5,24 +5,25 @@
 
 void printMaze(Maze *maze, Solver *solver)
 {
-    Serial.println("\nstart print\n");
-    Serial.print(" ");
+    #if ACTIVE_OUTPUT
+    PRINTLN("\nstart print\n");
+    PRINT(" ");
     for (int j = 0; j < MAZE_SIZE; j++)
     {
-        Serial.print(String("c:") + String(j) + " ");
+        PRINT(String("c:") + String(j) + " ");
     }
-    Serial.print("\n+");
+    PRINT("\n+");
     for (int j = 0; j < MAZE_SIZE; j++)
     {
-        Serial.print("---+");
+        PRINT("---+");
     }
     for (int8_t i = 0; i < MAZE_SIZE; i++)
     {
-        Serial.print("\n|");
+        PRINT("\n|");
         for (int8_t j = 0; j < MAZE_SIZE; j++)
         {
             char symbols[] = {' ', 'L', 'U', 'R', 'D'};
-            Serial.print(" " + 
+            PRINT(" " + 
                          String( symbols[int(solver->whereFrom[j][i])] )
                          + " "); 
             CellWalls walls = maze->getWalls({j, i});
@@ -35,22 +36,23 @@ void printMaze(Maze *maze, Solver *solver)
             else
                 out = " ";
                 
-            Serial.print(out);
+            PRINT(out);
         }
-        Serial.print(" l:" + String(i) + "\n+");
+        PRINT(" l:" + String(i) + "\n+");
         for (int j = 0; j < MAZE_SIZE; j++)
         {
             CellWalls walls = maze->getWalls({j, i});
             // CellWalls walls = CellWalls(YES, YES, YES, YES);
-            // Serial.print("im here");
+            // PRINT("im here");
             if (walls.down == WALL)
-                Serial.print("---");
+                PRINT("---");
             else if (walls.down == UNDEFINED)
-                Serial.print(" . ");
+                PRINT(" . ");
             else
-                Serial.print("   ");
-            Serial.print("+");
+                PRINT("   ");
+            PRINT("+");
         }
     }
-    Serial.print("\nfinish print\n");
+    PRINT("\nfinish print\n");
+    #endif
 }

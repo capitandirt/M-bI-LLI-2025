@@ -1,6 +1,15 @@
 #pragma once
 #include <Arduino.h>
 
+#define ACTIVE_OUTPUT (false)
+#if ACTIVE_OUTPUT
+  #define PRINT(x) Serial.print(x)
+  #define PRINTLN(x) Serial.println(x)
+#else
+  #define PRINT(x)
+  #define PRINTLN(x)
+#endif
+
 #define Ts_us 2000.0 // Период квантования в [мкс] [мс * 1000]
 #define Ts_s (Ts_us / 1000000.0) // Период квантования в [с]
 

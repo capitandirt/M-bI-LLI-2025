@@ -2,6 +2,7 @@
 #include "config.h"
 #include "odometry.h"
 #include "MotionControl.h"
+#include "Solver.h"
 
 struct Sensors
 {
@@ -208,6 +209,66 @@ public:
         progEnd = rotMod(progEnd + 1);
         cycCicle[progEnd] = cyc;
     }
+    void ConvertPathToCyc(Solver* solver)
+    {
+        static Direction::Dir correctDir = Direction::Dir::RIGHT; // изначально это стартовое направдение робота по лабиринту (направо / вниз)
+        for(int i = 0; i <= solver->pathEndIndex; i++)
+        {
+            ///ДОДЕЛАЙ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        }
+    }
+    void printCyc()
+    {
+        #if ACTIVE_OUTPUT
+        for(int i = 0; i < CYC_BUF_SIZE; i++)
+        {
+            if(cycCicle[i] == FWD)
+            {
+                PRINT("FWD; ");
+            }
+            else if(cycCicle[i] == SS90EL)
+            {
+                PRINT("SS90EL; ");
+            }
+            else if(cycCicle[i] == SS90ER)
+            {
+                PRINT("SS90ER; ");
+            }
+            else if(cycCicle[i] == SD45SL)
+            {
+                PRINT("SD45SL; ");
+            }
+            else if(cycCicle[i] == SD45SR)
+            {
+                PRINT("SD45SR; ");
+            }
+            else if(cycCicle[i] == DS45SL)
+            {
+                PRINT("DS45SL; ");
+            }
+            else if(cycCicle[i] == DS45SR)
+            {
+                PRINT("DS45SR; ");
+            }
+            else if(cycCicle[i] == SD135SR)
+            {
+                PRINT("SD135SR; ");
+            }
+            else if(cycCicle[i] == SS180S)
+            {
+                PRINT("SS180S; ");
+            }
+            else if(cycCicle[i] == STOP)
+            {
+                PRINT("STOP; ");
+            }
+            else
+            {
+                PRINT("UNDEFINED; ");
+            }
+        }
+        #endif
+    }
 
     bool exec()
     {
@@ -221,7 +282,7 @@ public:
         polarSpeedToMotorSpeed(ms.v_f0, ms.theta_i0, &omegaL, &omegaR);
         s.state.update(omegaL, omegaR);
         
-        //Serial.println(String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(ms.isComplete));
+        //PRINTLN(String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(ms.isComplete));
         if(ms.isComplete)
         {
             progCounter = rotMod(progCounter + 1);
@@ -231,7 +292,7 @@ public:
         
         if(cycCicle[progCounter] != STOP) 
         {
-            //Serial.println(String(omegaL) + " " + String(omegaR) + " " + String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(s.state.dist()));
+            //PRINTLN(String(omegaL) + " " + String(omegaR) + " " + String(ms.v_f0) + " " + String(ms.theta_i0) + " " + String(s.state.dist()));
         }
         motionControl->tick(ms.v_f0, ms.theta_i0);
         if(ms.isComplete) return true;

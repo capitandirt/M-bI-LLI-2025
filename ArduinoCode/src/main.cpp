@@ -5,16 +5,50 @@
 #include "Maze.h"
 #include "mazePrint.h" 
 
+void work()
+{
+  static Direction::Dir correctDir = Direction::Dir::RIGHT; // изначально это стартовое направдение робота по лабиринту (направо / вниз)
+        
+  solver.solve(state.coord_out(), FINISH_CELL, &maze);
+  Direction::Dir next = solver.nextPathCell();
+  state.updateCoord(next);
+
+  enum moveSet : uint8_t
+  {
+    FORWARD = 0,
+    LEFT_TURN = 1,
+    STOP_PROGRAMM = 2,
+    RIGHT_TURN = 3
+  };
+  moveSet releativeDirection = (moveSet)((int(next) - int(correctDir) + 4) % 4); // остальное - СТОП  
+  switch(releativeDirection)
+  {
+    case FORWARD:
+    {
+      asmr.addCyc(FWD);
+    }break;
+    case RIGHT_TURN:
+    {
+      asmr.addCyc(SS90ER);
+    };
+    case LEFT_TURN:
+    {
+      asmr.addCyc(SS90EL);
+    };
+    case STOP_PROGRAMM:
+    {
+      asmr.addCyc(STOP);
+    };
+  }
+  correctDir = next;
+}
+
 
 void setup()
 {
   initEncoders();
   initMotors();
   Serial.begin(115200);
-
-  //asmr.addCyc(SS90EL);
-  asmr.addCyc(SD135SR);
-  asmr.addCyc(STOP);
 
   maze.setWall({0,0}, {PASS, WALL, WALL, PASS});
   maze.setWall({1,0}, {WALL, PASS, WALL, PASS});
@@ -32,7 +66,13 @@ void setup()
   solver.writePath({1,2}, {7,9});
   solver.printPath();
   printMaze(&maze, &solver);
-  while(true);
+
+
+  // asmr.addCyc(FWD);
+  // asmr.addCyc(SS90ER);
+  // asmr.addCyc(FWD);
+  // asmr.addCyc(SS90EL);
+  // asmr.addCyc(STOP);
 }
 
 void loop()
@@ -50,7 +90,7 @@ void loop()
 
   // static VelEstimator virtualEstimator;
   // virtualEstimator.tick(checker);
-  // Serial.println(virtualEstimator.q_omega);
+  // PRINTLN(virtualEstimator.q_omega);
   
   ///////// SENSE /////////
   // Считывание датчиков
@@ -76,47 +116,23 @@ void loop()
     {
       if(asmr.exec())
       {
-        double correctRadAngle = (fmod(state.theta(), 2*PI));
-        Direction::Dir correctDir;
-        
-        solver.solve(state.coord_out(), FINISH_CELL, &maze);
-        Direction::Dir next = solver.nextPathCell();
-        state.updateCoord(next);
-        Direction::Dir releativeDirection = Direction::Dir(int(next) - int(correctDir));
-        switch(releativeDirection)
-        {
-          case Direction::Dir::UP:
-          {
-            asmr.addCyc(FWD);
-          }break;
-          case Direction::Dir::RIGHT:
-          {
-            asmr.addCyc(SS90ER);
-          };
-          case Direction::Dir::DOWN:
-          {
-            asmr.addCyc(SS180S);
-            asmr.addCyc(FWD);
-          };
-          case Direction::Dir::LEFT:
-          {
-            asmr.addCyc(SS90EL);
-          };
-        }
+        work();
       }
+      PRINT("IMALIVE");
+      asmr.printCyc();
     }
     break;
     case 1: //Serial test
     {
-      Serial.println("test Serial");
+      PRINTLN("test Serial");
     }
     case 2: // проверка заряда батареи
     {
-      Serial.println(battery.volts());
+      PRINTLN(battery.volts());
     }
     break;
     default:
-    Serial.println("idk what to do");
+    PRINTLN("idk what to do");
     delay(2000);
     break;
   }
